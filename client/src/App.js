@@ -1,7 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+      fetch('http://beatsheet-app-server-dev.us-east-1.elasticbeanstalk.com/api/message')
+          .then(response => response.json())
+          .then(data => console.log('Data: ', data))
+          .catch(error => console.error('Error fetching data: ', error));
+  }, []);
   return (
     <div className="App">
       <header className="App-header">

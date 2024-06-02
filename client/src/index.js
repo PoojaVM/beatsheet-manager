@@ -4,10 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
+import awsmobile from './aws-exports';
+import { Amplify } from 'aws-amplify';
 
-// import awsConfig from './aws-exports';
-// import { Amplify } from 'aws-amplify';
-// Amplify.configure(awsConfig);
+Amplify.configure(awsmobile);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

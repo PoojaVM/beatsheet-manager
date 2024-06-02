@@ -1,33 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
-import { useEffect } from 'react';
+import { Authenticator, withAuthenticator } from "@aws-amplify/ui-react";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Home from "./components/Home";
+import { LOGIN_FORM_FIELDS } from "./constants";
+import "@aws-amplify/ui-react/styles.css";
 
 function App() {
+  // const { user } = useAuthenticator((context) => [context.user]);
+  // const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+  // const { route } = useAuthenticator((context) => [context.route]);
+  // console.log('Test outside useEffect', authStatus, user, route);
 
-  useEffect(() => {
-      fetch('http://beatsheet-app-server-dev.us-east-1.elasticbeanstalk.com/api/message')
-          .then(response => response.json())
-          .then(data => console.log('Data: ', data))
-          .catch(error => console.error('Error fetching data: ', error));
-  }, []);
+  // useEffect(() => {
+  //   console.log('Test inside useEffect', authStatus, user, route);
+  // }, [authStatus, user, route]);
+  const { authUser, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={authUser ? <Navigate to="home" replace /> : <Authenticator />}
+      />
+      <Route
+        path="home"
+        element={authUser ? <Home /> : <Navigate to="/" replace />}
+      />
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
+    </Routes>
   );
 }
 
-export default App;
+const AppWithAuthenticator = withAuthenticator(
+  (props) => (
+    <AuthProvider>
+      <App {...props} />
+    </AuthProvider>
+  ),
+  { LOGIN_FORM_FIELDS }
+);
+
+export default AppWithAuthenticator;

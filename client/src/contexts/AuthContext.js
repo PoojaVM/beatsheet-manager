@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { Hub } from 'aws-amplify/utils';
 import { signOut } from 'aws-amplify/auth';
+import { addRequestInterceptors, clearRequestInterceptors } from '../api/axiosInstance';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const interceptorId = useRef(null);
   const [authUser, setAuthUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(true);
@@ -18,6 +20,11 @@ export const AuthProvider = ({ children }) => {
           throw new Error('No credentials in session');
         }
         setAuthUser(session);
+        const token = session?.tokens?.idToken?.toString();
+        if (token) {
+          const id = addRequestInterceptors(token);
+          interceptorId.current = id;
+        }
       } catch (error) {
         setAuthUser(null);
       } finally {
@@ -38,6 +45,9 @@ export const AuthProvider = ({ children }) => {
 
     return () => {
       listener();
+      if (interceptorId.current) {
+        clearRequestInterceptors(interceptorId.current);
+      }
     };
   }, []);
 

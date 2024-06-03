@@ -19,7 +19,6 @@ const Layout = ({ children }) => {
 
   return (
     <div className="bg-background min-h-screen max-w-screen-xl lg:max-w-screen-2xl mx-auto p-2">
-      {/* <AppBar /> */}
       {showWelcome
         ? <Welcome />
         : (<>

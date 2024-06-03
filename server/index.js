@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 async function assertDatabaseConnection() {
-  console.log(`Checking database connection...`);
+  console.log("Checking database connection...");
   try {
     await sequelize.authenticate();
     console.log("Database connection OK!");

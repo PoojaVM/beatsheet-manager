@@ -1,0 +1,31 @@
+<svg width="50" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="20" height="80" fill="#ffeb99"/>
+  <rect x="40" y="10" width="20" height="80" fill="#ffd54d"/>
+  <rect x="70" y="10" width="20" height="80" fill="#ffc300"/>
+</svg>
+
+
+<!-- <svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .text { font-family: 'Arial, sans-serif'; }
+    .logo-text { font-size: 20px; font-weight: bold; fill: #000000; }
+    .tagline-text { font-size: 12px; fill: #ffc300; }
+    .bars { fill: #ffc300; }
+  </style>
+  
+  <rect x="10" y="10" width="20" height="80" fill="#ffeb99"/>
+  <rect x="40" y="10" width="20" height="80" fill="#ffd54d"/>
+  <rect x="70" y="10" width="20" height="80" fill="#ffc300"/>
+</svg> -->
+
+<!-- <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="20" height="80" fill="#F4C430"/>
+  <rect x="40" y="10" width="20" height="80" fill="#F8D866"/>
+  <rect x="70" y="10" width="20" height="80" fill="#FAE8AC"/>
+</svg> -->
+
+<!-- <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <rect x="10" y="10" width="20" height="80" fill="#ffeb99"/>
+  <rect x="40" y="10" width="20" height="80" fill="#ffd54d"/>
+  <rect x="70" y="10" width="20" height="80" fill="#ffc300"/>
+</svg> -->

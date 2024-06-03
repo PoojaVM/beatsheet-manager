@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
 import awsmobile from './aws-exports';
 import { Amplify } from 'aws-amplify';
+import './index.css';
 
 Amplify.configure(awsmobile);
 

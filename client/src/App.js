@@ -8,6 +8,7 @@ import "@aws-amplify/ui-react/styles.css";
 import BeatSheets from "./components/BeatSheets";
 import Welcome from "./components/Welcome";
 import Layout from "./components/Layout";
+import ViewBeatSheet from "./components/ViewBeatSheet";
 
 function App() {
   const { authUser, loading } = useAuth();
@@ -35,6 +36,7 @@ function App() {
           <>
             <Route path="/home" element={<Layout><Home /></Layout>} />
             <Route path="/beatsheets" element={<Layout><BeatSheets /></Layout>} />
+            <Route path="/beatsheets/:id" element={<Layout><ViewBeatSheet /></Layout>} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </>
         ) : (

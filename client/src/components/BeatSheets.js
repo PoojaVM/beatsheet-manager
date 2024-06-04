@@ -112,7 +112,10 @@ const BeatSheets = () => {
                 Description
               </th>
               <th scope="col" className="px-6 py-3">
-                Completed
+                Created At
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Last Updated At
               </th>
               <th scope="col" className="px-6 py-3 text-right">
                 Actions
@@ -150,7 +153,25 @@ const BeatSheets = () => {
                   </th>
                   <td className="px-6 py-4">{beatSheet.description}</td>
                   <td className="px-6 py-4">
-                    {beatSheet.completed_at ? "Yes" : "No"}
+                    {new Intl.DateTimeFormat(
+                      "en-US",
+                      {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      }
+                    ).format(new Date(beatSheet.createdAt))
+                    }
+                    </td>
+                  <td className="px-6 py-4">
+                    {
+                      new Intl.DateTimeFormat(
+                        "en-US",
+                        {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        }
+                      ).format(new Date(beatSheet.updatedAt))
+                    }
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button

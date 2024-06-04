@@ -19,7 +19,7 @@ function AppBar() {
 
   const links = [
     // { label: 'Home', href: '/home' },
-    // { label: 'My BeatSheets', href: '/beatsheets' },
+    { label: 'My BeatSheets', href: '/beatsheets' },
     { label: 'Sign Out', onClick: signOut },
   ];
 

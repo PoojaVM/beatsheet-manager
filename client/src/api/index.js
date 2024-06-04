@@ -51,16 +51,72 @@ const beatSheetApi = {
       throw error;
     }
   },
-  // edit act title beatSheets/:beatSheetId/acts
-  async updateAct(beatSheetId, actId, title) {
+  async reorderAct(beatSheetId, actId, newPosition) {
     try {
-      const response = await axiosInstance.put(`/beatSheets/${beatSheetId}/acts/${actId}`, {title});
+      const response = await axiosInstance.put(
+        `beatsheets/${beatSheetId}/acts/${actId}/reorder`,
+        { newPosition }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error reordering act: ", error);
+      throw error;
+    }
+  },
+  async createAct(beatSheetId, data) {
+    try {
+      const response = await axiosInstance.post(`/beatsheets/${beatSheetId}/acts`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating act: ", error);
+      throw error;
+    }
+  },
+  async updateAct(beatSheetId, actId, {title, description}) {
+    try {
+      const response = await axiosInstance.put(`/beatSheets/${beatSheetId}/acts/${actId}`, {title, description});
       return response.data;
     } catch (error) {
       console.error("Error updating act: ", error);
       throw error;
     }
   },
+  async deleteAct(beatSheetId, actId) {
+    try {
+      const response = await axiosInstance.delete(`/beatSheets/${beatSheetId}/acts/${actId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting act: ", error);
+      throw error;
+    }
+  },
+  async createBeat(actId, data) {
+    try {
+      const response = await axiosInstance.post(`acts/${actId}/beats`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating beat: ", error);
+      throw error;
+    }
+  },
+  async updateBeat(actId, beatId, data) {
+    try {
+      const response = await axiosInstance.put(`acts/${actId}/beats/${beatId}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("Error updating beat: ", error);
+      throw error;
+    }
+  },
+  async deleteBeat(actId, beatId) {
+    try {
+      const response = await axiosInstance.delete(`acts/${actId}/beats/${beatId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting beat: ", error);
+      throw error;
+    }
+  }
 };
 
 export default beatSheetApi;

@@ -1,4 +1,16 @@
-import sequelize, { Act } from "../models/index.js";
+import sequelize, { Act, BeatSheet } from "../models/index.js";
+
+async function adjustAllActPositions(beat_sheet_id) {
+  const allActs = await Act.findAll({
+    where: { beat_sheet_id },
+    order: [["position", "ASC"]],
+  });
+
+  for (const a of allActs) {
+    a.position = allActs.indexOf(a) + 1;
+    await a.save();
+  }
+}
 
 export default class ActController {
   async list(req, res, next) {
@@ -32,7 +44,12 @@ export default class ActController {
         position,
         beat_sheet_id,
       });
-      res.json(newAct);
+
+      await BeatSheet.update(
+        { updated_at: new Date() },
+        { where: { id: beat_sheet_id } }
+      );
+      res.json({ act: newAct });
     } catch (error) {
       next(error);
     }
@@ -42,7 +59,7 @@ export default class ActController {
     try {
       const id = req.params.id;
       const act = await Act.findByPk(id);
-      res.json(act);
+      res.json({ act });
     } catch (error) {
       next(error);
     }
@@ -59,10 +76,6 @@ export default class ActController {
         throw { status: 400, message: "Title is required" };
       }
 
-      if (!description) {
-        throw { status: 400, message: "Description is required" };
-      }
-
       payload.title = title;
       payload.description = description;
 
@@ -75,6 +88,10 @@ export default class ActController {
 
       const updatedAct = await Act.findByPk(id);
       if (updatedAct) {
+        await BeatSheet.update(
+          { updated_at: new Date() },
+          { where: { id: updatedAct.beat_sheet_id } }
+        );
         res.json({ act: updatedAct });
       } else {
         res.status(404).json({ message: "Act not found after update" });
@@ -119,6 +136,11 @@ export default class ActController {
         return act;
       });
 
+      await BeatSheet.update(
+        { updated_at: new Date() },
+        { where: { id: beat_sheet_id } }
+      );
+
       res.json({ act: result });
     } catch (error) {
       next(error);
@@ -128,8 +150,19 @@ export default class ActController {
   async delete(req, res, next) {
     try {
       const id = req.params.id;
-      await Act.destroy(id);
-      res.json();
+      const act = await Act.findByPk(id);
+
+      if (!act) {
+        throw { status: 404, message: "Act not found" };
+      }
+
+      await act.destroy();
+      await adjustAllActPositions(act.beat_sheet_id);
+      await BeatSheet.update(
+        { updated_at: new Date() },
+        { where: { id: act.beat_sheet_id } }
+      );
+      res.json({ deleted: true });
     } catch (error) {
       next(error);
     }

@@ -5,13 +5,21 @@ import beatSheetApi from "../api";
 import DismissableAlert from "./DismissableAlert";
 import Loader from "./Loader";
 
-const EditFormModal = ({ entity, afterSave, onClose, name }) => {
+const BeatFormModal = ({ actId, beat, afterSave, onClose }) => {
   const [title, setTitle] = useState({
-    value: entity?.title || "",
+    value: beat?.title || "",
     error: null,
   });
   const [description, setDescription] = useState({
-    value: entity?.description || "",
+    value: beat?.description || "",
+    error: null,
+  });
+  const [duration, setDuration] = useState({
+    value: beat?.duration || "",
+    error: null,
+  });
+  const [cameraAngle, setCameraAngle] = useState({
+    value: beat?.camera_angle || "",
     error: null,
   });
   const [loading, setLoading] = useState(false);
@@ -19,14 +27,22 @@ const EditFormModal = ({ entity, afterSave, onClose, name }) => {
 
   useEffect(() => {
     setTitle({
-      value: entity?.title || "",
+      value: beat?.title || "",
       error: null,
     });
     setDescription({
-      value: entity?.description || "",
+      value: beat?.description || "",
       error: null,
     });
-  }, [entity]);
+    setDuration({
+      value: beat?.duration || "",
+      error: null,
+    });
+    setCameraAngle({
+      value: beat?.camera_angle || "",
+      error: null,
+    });
+  }, [beat]);
 
   const handleSubmit = async (event) => {
     try {
@@ -36,32 +52,32 @@ const EditFormModal = ({ entity, afterSave, onClose, name }) => {
         return;
       }
 
-      if (name === 'BeatSheet' && !description.value.trim()) {
+      if (!description.value.trim()) {
         setDescription({ ...description, error: "Description is required" });
+        return;
+      }
+
+      if (!duration.value) {
+        setDuration({ ...duration, error: "Duration is required" });
         return;
       }
 
       const data = {
         title: title.value,
         description: description.value,
+        duration: Number(duration.value),
+        camera_angle: cameraAngle.value,
       };
 
       setLoading(true);
       setError(null);
 
-      if (name === "BeatSheet") {
-        if (entity?.id) {
-          await beatSheetApi.updateBeatSheet(entity.id, data);
-        } else {
-          await beatSheetApi.createBeatSheet(data);
-        }
+      if (beat?.id) {
+        await beatSheetApi.updateBeat(actId, beat.id, data);
       } else {
-        if (entity?.id) {
-          await beatSheetApi.updateAct(entity.beatSheetId, entity.id, data);
-        } else {
-          await beatSheetApi.createAct(entity.beatSheetId, data);
-        }
+        await beatSheetApi.createBeat(actId, data);
       }
+
       await afterSave();
       setLoading(false);
       onClose();
@@ -73,10 +89,10 @@ const EditFormModal = ({ entity, afterSave, onClose, name }) => {
 
   return (
     <div
-      id="beatSheetFormModal"
+      id="beatModal"
       tabIndex="-1"
       aria-hidden="true"
-      className={`fixed inset-0 z-50 overflow-y-auto ${!entity && "hidden"}`}
+      className={`fixed inset-0 z-50 overflow-y-auto ${!beat && "hidden"}`}
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -105,7 +121,7 @@ const EditFormModal = ({ entity, afterSave, onClose, name }) => {
             {loading && <Loader />}
             <div class="flex items-start justify-between py-4 border-b rounded-t dark:border-gray-600">
               <h3 class="text-xl font-semibold text-gray-900">
-                {entity?.id ? "Edit" : "Create"} {name}
+                {beat?.id ? "Edit" : "Create"} Beat
               </h3>
               <button
                 type="button"
@@ -144,10 +160,46 @@ const EditFormModal = ({ entity, afterSave, onClose, name }) => {
                 const value = e.target.value.trim();
                 setDescription({
                   value,
-                  error: (name === 'BeatSheet' && !value) ? "Description is required" : "",
+                  error: !value ? "Description is required" : "",
                 });
               }}
-              required={name === 'BeatSheet'}
+            />
+            <CustomInput
+              label="Duration"
+              placeholder="Enter duration(in seconds)"
+              value={duration.value}
+              error={duration.error}
+              onChange={(e) => {
+                // Only allow numbers
+                setDuration({
+                  value: e.target.value.replace(/\D/g, ""),
+                  error: "",
+                });
+              }}
+              onBlur={(e) => {
+                const value = e.target.value.trim().replace(/\D/g, "");
+                setDuration({
+                  value,
+                  error: !value ? "Duration is required" : "",
+                });
+              }}
+            />
+            <CustomInput
+              label="Camera Angle"
+              placeholder="Enter camera angle details"
+              value={cameraAngle.value}
+              error={cameraAngle.error}
+              onChange={(e) =>
+                setCameraAngle({ value: e.target.value, error: "" })
+              }
+              onBlur={(e) => {
+                const value = e.target.value.trim();
+                setCameraAngle({
+                  value,
+                  error: "",
+                });
+              }}
+              required={false}
             />
             {error && (
               <DismissableAlert
@@ -178,4 +230,4 @@ const EditFormModal = ({ entity, afterSave, onClose, name }) => {
   );
 };
 
-export default EditFormModal;
+export default BeatFormModal;

@@ -25,8 +25,8 @@ const Layout = ({ children }) => {
         <>
           <AppBar />
           <div
-            className="mt-20 overflow-scroll"
-            style={{ height: "calc(100vh - 80px - 5rem)" }}
+            className="pt-20 overflow-scroll"
+            style={{ height: "calc(100vh - 80px)" }}
           >
             {children}
           </div>

@@ -116,7 +116,16 @@ const beatSheetApi = {
       console.error("Error deleting beat: ", error);
       throw error;
     }
-  }
+  },
+  async deleteBeatSheet(id) {
+    try {
+      const response = await axiosInstance.delete(`/beatsheets/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting beat sheet: ", error);
+      throw error;
+    }
+  },
 };
 
 export default beatSheetApi;

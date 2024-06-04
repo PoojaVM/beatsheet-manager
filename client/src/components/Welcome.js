@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { ReactComponent as AppLogo } from "../assets/logo.svg";
+import { LogoFirstBar, LogoSecondBar, LogoThirdBar } from "../assets";
+
 import { useAuth } from "../contexts/AuthContext";
 
 function Welcome() {
@@ -36,7 +37,17 @@ function Welcome() {
       <div className="flex flex-col items-center space-y-4">
         <h1 className={`text-2xl md:text-4xl font-bold animate-slide-in-left ${animationEnded ? "opacity-100" : "opacity-0"}`}>Welcome, {userName}</h1>
         <p className={`text-md md:text-lg mt-2 animate-slide-in-left-delay-1 ${animationEnded ? "opacity-100" : "opacity-0"}`}>Craft Your Success, Beat By Beat</p>
-        <AppLogo className={`h-16 w-16 animate-slide-in-left-delay-2 ${animationEnded ? "opacity-100" : "opacity-0"}`} />
+        {/* <AppLogo className={`h-16 w-16 animate-slide-in-left-delay-2 ${animationEnded ? "opacity-100" : "opacity-0"}`} /> */}
+        <div className="flex">
+        <LogoFirstBar className={`animate-slide-in-left-delay-2 ${animationEnded ? "opacity-100" : "opacity-0"}`} />
+        <LogoSecondBar className={`animate-slide-in-left-delay-3 ${animationEnded ? "opacity-100" : "opacity-0"}`} />
+        <LogoThirdBar className={`animate-slide-in-left-delay-4 ${animationEnded ? "opacity-100" : "opacity-0"}`} />
+        </div>
+        {/* <div className={`flex flex-row items-center space-x-1 animate-slide-in-left-delay-2 ${animationEnded ? "opacity-100" : "opacity-0"}`}>
+          <LogoFirstBar className="h-16 w-16" />
+          <LogoSecondBar className="h-16 w-16" />
+          <LogoThirdBar className="h-16 w-16" />
+        </div> */}
       </div>
     </div>
   );

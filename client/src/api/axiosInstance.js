@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: 'http://beatsheet-app-server-dev.us-east-1.elasticbeanstalk.com/api/',
-  // baseURL: 'https://d2htlgwc4sstzt.cloudfront.net/api/',
 });
 
 export const addRequestInterceptors = (token) => {

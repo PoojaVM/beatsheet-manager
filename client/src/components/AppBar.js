@@ -18,7 +18,6 @@ function AppBar() {
   }
 
   const links = [
-    // { label: 'Home', href: '/home' },
     { label: 'My BeatSheets', href: '/beatsheets' },
     { label: 'Sign Out', onClick: signOut },
   ];
@@ -31,7 +30,7 @@ function AppBar() {
     <>
       <nav className="border-gray-800">
         <div className="flex flex-wrap items-center justify-between py-4">
-          <a href="/home" className="flex items-center rtl:space-x-reverse">
+          <a href="/beatsheets" className="flex items-center rtl:space-x-reverse">
             <AppLogo className="h-8" alt="App Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
               BeatSheet Creator

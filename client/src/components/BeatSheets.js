@@ -4,6 +4,7 @@ import beatSheetApi from "../api";
 import EditFormModal from "./EditModal";
 import { CloseIcon, SearchIcon } from "../assets";
 import useDebouncedInput from "../hooks/useDebouncedInput";
+import ConfirmationModal from "./ConfirmationModal";
 
 const DropdownForm = ({ onSearch }) => {
   const {
@@ -58,6 +59,7 @@ const BeatSheets = () => {
   const [beatSheets, setBeatSheets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [beatSheetToDelete, setBeatSheetToDelete] = useState(null);
 
   const [search, setSearch] = useState("");
 
@@ -79,6 +81,16 @@ const BeatSheets = () => {
     fetchBeatSheets();
   }, [fetchBeatSheets]);
 
+  const deleteBeatSheet = async () => {
+    try {
+      await beatSheetApi.deleteBeatSheet(beatSheetToDelete.id);
+      setBeatSheetToDelete(null);
+      fetchBeatSheets();
+    } catch (error) {
+      console.error("Error deleting beat sheet: ", error);
+    }
+  }
+
   return (
     <div>
       {selectedBeatSheet && (
@@ -87,6 +99,14 @@ const BeatSheets = () => {
           entity={selectedBeatSheet}
           afterSave={fetchBeatSheets}
           onClose={() => setSelectedBeatSheet(null)}
+        />
+      )}
+      {beatSheetToDelete && (
+        <ConfirmationModal
+          isOpen={!!beatSheetToDelete}
+          onCancel={() => setBeatSheetToDelete(null)}
+          onConfirm={deleteBeatSheet}
+          message={`Delete BeetSheet - '${beatSheetToDelete.title}'?`}
         />
       )}
       <div className="relative overflow-x-auto shadow-md shadow-primary-900 sm:rounded-lg">
@@ -180,13 +200,19 @@ const BeatSheets = () => {
                         navigate(`/beatsheets/${beatSheet.id}`);
                       }}
                     >
-                      Edit Acts
+                      View Acts
                     </button>
                     <button
-                      className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
+                      className="font-medium text-primary-600 dark:text-primary-500 hover:underline mr-2"
                       onClick={() => setSelectedBeatSheet(beatSheet)}
                     >
                       Edit BeatSheet
+                    </button>
+                    <button
+                      className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
+                      onClick={() => setBeatSheetToDelete(beatSheet)}
+                    >
+                      Delete BeatSheet
                     </button>
                   </td>
                 </tr>

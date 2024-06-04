@@ -33,6 +33,8 @@ module.exports = {
         'slide-in-left': 'slide-in-left 1s ease-in-out',
         'slide-in-left-delay-1': 'slide-in-left 1s ease-in-out 0.5s',
         'slide-in-left-delay-2': 'slide-in-left 1s ease-in-out 1s',
+        'slide-in-left-delay-3': 'slide-in-left 1s ease-in-out 1.3s',
+        'slide-in-left-delay-4': 'slide-in-left 1s ease-in-out 1.6s',
       },
     },
   },

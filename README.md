@@ -6,9 +6,10 @@
 - [Links](#links)
 - [Usage Instructions](#usage-instructions)
 - [Features](#features)
+- [Bonus Features](#bonus-features)
+- [Assumptions](#assumptions)
 - [UI Considerations](#ui-considerations)
 - [Technologies Used](#technologies-used)
-- [Bonus Features](#bonus-features)
 
 
 ### Links
@@ -57,6 +58,8 @@
     - User is shown a welcome message upon login
 4. List Beatsheets
     - Users are shows a list of beatsheets post welcome message
+    - The beatsheets are sorted by the last updated date
+    - Search functionality is provided to search for beatsheets by name or description
     - Each row shows the beatsheet name, description, created date, and last updated date
     - User can click on the action items in the row to view and edit the beatsheet
 5. Beatsheet actions
@@ -80,6 +83,10 @@
 5. Reorder acts (drag and drop acts) 
 6. Reorder beats (moving beats in same act and across acts)
 7. Responsive design
+8. Permission based access
+
+### Assumptions
+1. User can only view and edit their own beatsheets
 
 ### UI Considerations
 1. Styling is done using Tailwind CSS
@@ -87,3 +94,13 @@
 3. Secondary color - #181818
 4. The UI is responsive and works well on all screen sizes
 5. Validations are done on the client side and the user is shown an error message if the input is invalid
+
+### Technologies Used
+1. React
+2. Node.js
+3. Express
+4. Postgres
+5. AWS Cognito
+6. Tailwind CSS
+8. AWS Elastic Beanstalk
+9. AWS S3

@@ -227,120 +227,126 @@ function ViewBeatSheet() {
         </div>
         <p className="text-gray-200">{beatSheet.description}</p>
       </div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="all-acts" direction="horizontal" type="act">
-          {(provided) => (
-            <div
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className="flex flex-row gap-4"
-            >
-              {beatSheet.acts.map((act, index) => (
-                <Draggable
-                  key={act.id}
-                  draggableId={`act-${act.id}`}
-                  index={index}
-                >
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      onClick={actFunctionFactory(act, "edit")}
-                      // style={{ height: "fit-content" }}
-                    >
-                      <div className="act-card relative w-80 p-6 border rounded-lg shadow bg-gray-800 border-gray-700">
-                        <div className="absolute right-2 top-1 flex flex-row gap-2">
-                          <button
-                            className="font-small text-primary-500 hover:underline"
-                            onClick={actFunctionFactory(act, "edit")}
-                          >
-                            Edit
-                          </button>
-                          <Divider orientation="vertical" />
-                          <button
-                            className="font-small text-primary-500 hover:underline"
-                            onClick={actFunctionFactory(act, "delete")}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                        <div className="mb-4">
-                          <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">
-                            {act.title}
-                          </h5>
-                          <span className="block text-l tracking-tight text-white w-full text-ellipsis whitespace-nowrap overflow-hidden">
-                            {act.description || "No Description"}
-                          </span>
-                        </div>
-                        <Divider />
-                        <button
-                          className="text-primary-500 hover:underline mt-4 text-center w-full"
-                          onClick={onCreateBeatClickFactory(act)}
-                        >
-                          + Create Beat
-                        </button>
-                        <Droppable droppableId={`act-${act.id}`} type="beat">
-                          {(provided) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.droppableProps}
-                              className="flex flex-col gap-4 mt-4"
+      {
+        beatSheet?.acts?.length ? (
+          <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="all-acts" direction="horizontal" type="act">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="flex flex-row gap-4"
+              >
+                {beatSheet.acts.map((act, index) => (
+                  <Draggable
+                    key={act.id}
+                    draggableId={`act-${act.id}`}
+                    index={index}
+                  >
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        onClick={actFunctionFactory(act, "edit")}
+                        // style={{ height: "fit-content" }}
+                      >
+                        <div className="act-card relative w-80 p-6 border rounded-lg shadow bg-gray-800 border-gray-700">
+                          <div className="absolute right-2 top-1 flex flex-row gap-2">
+                            <button
+                              className="font-small text-primary-500 hover:underline"
+                              onClick={actFunctionFactory(act, "edit")}
                             >
-                              {act.beats.map((beat, index) => (
-                                <Draggable
-                                  key={beat.id}
-                                  draggableId={`beat-${beat.id}`}
-                                  index={index}
-                                >
-                                  {(provided) => (
-                                    <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      onClick={beatFunctionFactory(beat, "edit")}
-                                    >
-                                      <div className="beat-card p-3 bg-white rounded shadow cursor-pointer">
-                                        <p className="text-gray-700 dark:text-gray-400">
-                                          {beat.title}
-                                        </p>
-                                        <p className="text-gray-500">
-                                          {beat.startTime} - {beat.endTime}
-                                        </p>
-                                        <div className="flex flex-row mt-4 gap-2 end">
-                                          <button
-                                            className="text-primary-500 hover:underline"
-                                            onClick={beatFunctionFactory(beat, "edit")}
-                                          >
-                                            Edit
-                                          </button>
-                                          <Divider orientation="vertical" />
-                                          <button
-                                            className="text-primary-500 hover:underline"
-                                            onClick={beatFunctionFactory(beat, "delete")}
-                                          >
-                                            Delete
-                                          </button>
+                              Edit
+                            </button>
+                            <Divider orientation="vertical" />
+                            <button
+                              className="font-small text-primary-500 hover:underline"
+                              onClick={actFunctionFactory(act, "delete")}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                          <div className="mb-4">
+                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">
+                              {act.title}
+                            </h5>
+                            <span className="block text-l tracking-tight text-white w-full text-ellipsis whitespace-nowrap overflow-hidden">
+                              {act.description || "No Description"}
+                            </span>
+                          </div>
+                          <Divider />
+                          <button
+                            className="text-primary-500 hover:underline mt-4 text-center w-full"
+                            onClick={onCreateBeatClickFactory(act)}
+                          >
+                            + Create Beat
+                          </button>
+                          <Droppable droppableId={`act-${act.id}`} type="beat">
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                className="flex flex-col gap-4 mt-4"
+                              >
+                                {act.beats.map((beat, index) => (
+                                  <Draggable
+                                    key={beat.id}
+                                    draggableId={`beat-${beat.id}`}
+                                    index={index}
+                                  >
+                                    {(provided) => (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        onClick={beatFunctionFactory(beat, "edit")}
+                                      >
+                                        <div className="beat-card p-3 bg-white rounded shadow cursor-pointer">
+                                          <p className="text-gray-700 dark:text-gray-400">
+                                            {beat.title}
+                                          </p>
+                                          <p className="text-gray-500">
+                                            {beat.startTime} - {beat.endTime}
+                                          </p>
+                                          <div className="flex flex-row mt-4 gap-2 end">
+                                            <button
+                                              className="text-primary-500 hover:underline"
+                                              onClick={beatFunctionFactory(beat, "edit")}
+                                            >
+                                              Edit
+                                            </button>
+                                            <Divider orientation="vertical" />
+                                            <button
+                                              className="text-primary-500 hover:underline"
+                                              onClick={beatFunctionFactory(beat, "delete")}
+                                            >
+                                              Delete
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                            </div>
-                          )}
-                        </Droppable>
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                              </div>
+                            )}
+                          </Droppable>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        ) : (
+          <div className="text-gray-200 w-full text-center m-20">No Acts found. Click on "+ Create Act" button to get started.</div>
+        )
+      }
     </>
   );
 }

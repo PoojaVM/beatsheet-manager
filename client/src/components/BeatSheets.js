@@ -69,7 +69,9 @@ const BeatSheets = () => {
     try {
       setLoading(true);
       const data = await beatSheetApi.getBeatSheets({ search });
-      setBeatSheets(data.beatSheets);
+      // Sort beatsheets as per updatedAt
+      const sortedBeatSheets = data.beatSheets.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      setBeatSheets(sortedBeatSheets);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -171,8 +173,8 @@ const BeatSheets = () => {
                   >
                     {beatSheet.title}
                   </th>
-                  <td className="px-6 py-4">{beatSheet.description}</td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 w-3/4 text-ellipsis whitespace-nowrap overflow-hidden inline-block">{beatSheet.description}</td>
+                  <td className="px-6 py-4 w-1/6">
                     {new Intl.DateTimeFormat(
                       "en-US",
                       {
@@ -182,7 +184,7 @@ const BeatSheets = () => {
                     ).format(new Date(beatSheet.createdAt))
                     }
                     </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 w-1/6">
                     {
                       new Intl.DateTimeFormat(
                         "en-US",
@@ -193,7 +195,7 @@ const BeatSheets = () => {
                       ).format(new Date(beatSheet.updatedAt))
                     }
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right flex">
                     <button
                       className="font-medium text-primary-600 dark:text-primary-500 hover:underline mr-2"
                       onClick={() => {

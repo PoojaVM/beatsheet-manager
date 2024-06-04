@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
         <>
           <AppBar />
           <div
-            className="pt-20 overflow-scroll"
+            className="pt-2 overflow-scroll"
             style={{ height: "calc(100vh - 80px)" }}
           >
             {children}

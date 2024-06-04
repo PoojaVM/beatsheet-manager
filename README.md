@@ -94,6 +94,7 @@
 3. Secondary color - #181818
 4. The UI is responsive and works well on all screen sizes
 5. Validations are done on the client side and the user is shown an error message if the input is invalid
+6. Acknowledgement message is shown on successful actions like adding, editing, and deleting beatsheets, acts, and beats
 
 ### Technologies Used
 1. React

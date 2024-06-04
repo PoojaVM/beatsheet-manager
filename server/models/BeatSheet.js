@@ -26,6 +26,11 @@ export default class BeatSheet extends Model {
           type: DataTypes.STRING,
           allowNull: false,
         },
+        updated_at: {
+          type: DataTypes.DATE,
+          allowNull: false,
+          defaultValue: DataTypes.NOW,
+        },
       },
       {
         sequelize,

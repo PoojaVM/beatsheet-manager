@@ -1,10 +1,15 @@
 import axiosInstance from "./axiosInstance";
 
 const beatSheetApi = {
-  async getBeatSheets({ search }) {
+  async getBeatSheets({ search, page, sort, sortDir}) {
     try {
       const response = await axiosInstance.get("beatsheets", {
-        params: { search: search?.length ? search : undefined },
+        params: {
+          search: search?.length ? search : undefined,
+          page: page || 0,
+          sort: sort || 'id',
+          sortDir: sortDir || 'ASC'
+        },
       });
       return response.data;
     } catch (error) {

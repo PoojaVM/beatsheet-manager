@@ -2,24 +2,37 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import beatSheetApi from "../api";
 import EditFormModal from "./EditModal";
+import Pagination from "./Pagination";
 import { CloseIcon, SearchIcon } from "../assets";
 import useDebouncedInput from "../hooks/useDebouncedInput";
 import ConfirmationModal from "./ConfirmationModal";
+import Notify from "./Notify";
 
-const DropdownForm = ({ onSearch }) => {
+const DropdownForm = React.memo(({ onSearch }) => {
   const {
     inputValue: search,
     setInputValue: setSearch,
     debouncedValue: debouncedSearch,
   } = useDebouncedInput();
 
+  const mounted = React.useRef(false);
+
   const onClear = () => {
     setSearch("");
   };
 
   React.useEffect(() => {
-    onSearch(debouncedSearch);
+    if (mounted.current) {
+      onSearch(debouncedSearch);
+    }
   }, [onSearch, debouncedSearch]);
+
+  React.useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   return (
     // <div>
@@ -52,14 +65,17 @@ const DropdownForm = ({ onSearch }) => {
     </>
     // </div>
   );
-};
+});
 
 const BeatSheets = () => {
   const navigate = useNavigate();
   const [beatSheets, setBeatSheets] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [beatSheetToDelete, setBeatSheetToDelete] = useState(null);
+  const [notification, setNotification] = useState({ message: null, type: null });
 
   const [search, setSearch] = useState("");
 
@@ -68,16 +84,20 @@ const BeatSheets = () => {
   const fetchBeatSheets = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await beatSheetApi.getBeatSheets({ search });
-      // Sort beatsheets as per updatedAt
-      const sortedBeatSheets = data.beatSheets.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-      setBeatSheets(sortedBeatSheets);
+      const data = await beatSheetApi.getBeatSheets({
+        search,
+        page,
+        sort: "updatedAt",
+        sortDir: "DESC",
+      });
+      setTotalCount(data.totalCount);
+      setBeatSheets(data.beatSheets);
     } catch (error) {
       setError(error.message);
     } finally {
       setLoading(false);
     }
-  }, [search]);
+  }, [search, page]);
 
   useEffect(() => {
     fetchBeatSheets();
@@ -91,15 +111,38 @@ const BeatSheets = () => {
     } catch (error) {
       console.error("Error deleting beat sheet: ", error);
     }
+  };
+
+  const onSearch = React.useCallback((val) => {
+    setSearch(val);
+    setPage(0);
+  }, []);
+
+
+  const handleCloseNotification = () => {
+    setNotification({ message: null, type: null });
+  };
+
+  const afterSave = () => {
+    fetchBeatSheets();
+    setNotification({ message: 'BeatSheet saved successfully', type: 'success' });
   }
+    
 
   return (
     <div>
+      {notification.message && (
+        <Notify 
+          message={notification.message} 
+          type={notification.type} 
+          onClose={handleCloseNotification} 
+        />
+      )}
       {selectedBeatSheet && (
         <EditFormModal
           name="BeatSheet"
           entity={selectedBeatSheet}
-          afterSave={fetchBeatSheets}
+          afterSave={afterSave}
           onClose={() => setSelectedBeatSheet(null)}
         />
       )}
@@ -115,7 +158,7 @@ const BeatSheets = () => {
         <div className="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
           <h1 className="text-2xl font-semibold text-white">Beat Sheets</h1>
           <div className="flex flex-column items-center gap-3">
-            <DropdownForm onSearch={setSearch} />
+            <DropdownForm onSearch={onSearch} />
             <button
               className="block py-2 px-3 text-white rounded hover:bg-gray-700 md:hover:bg-transparent md:border-0 md:hover:text-blue-500 md:p-0 underline"
               onClick={() => setSelectedBeatSheet({})}
@@ -232,6 +275,13 @@ const BeatSheets = () => {
           </tbody>
         </table>
       </div>
+      <Pagination
+        currentPage={page}
+        totalCount={totalCount}
+        onPageChange={(newPage) => {
+          setPage(newPage);
+        }}
+      />
     </div>
   );
 };

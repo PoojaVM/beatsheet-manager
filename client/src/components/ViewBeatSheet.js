@@ -8,6 +8,8 @@ import BeatFormModal from "./BeatFormModal";
 import { Divider } from "@aws-amplify/ui-react";
 import { attachStartAndEndTimesToBeats } from "../utils";
 import ConfirmationModal from "./ConfirmationModal";
+import Notify from "./Notify";
+import { set } from "lodash";
 
 function ViewBeatSheet() {
   const { id: beatSheetId } = useParams();
@@ -21,6 +23,8 @@ function ViewBeatSheet() {
 
   const [actToDelete, setActToDelete] = useState(null);
   const [beatToDelete, setBeatToDelete] = useState(null);
+  const [notification, setNotification] = useState({ message: null, type: null });
+
 
   const fetchBeatSheet = useCallback(async () => {
     try {
@@ -104,12 +108,13 @@ function ViewBeatSheet() {
   const deleteAct = async () => {
     try {
       if (!actToDelete) return;
-
       setInlineLoading(true);
       await beatSheetApi.deleteAct(beatSheetId, actToDelete.id);
       setActToDelete(null);
       await fetchBeatSheet();
+      setNotification({ message: 'Act deleted successfully', type: 'success' });
     } catch (error) {
+      setNotification({ message: 'Error deleting act', type: 'error' });
       console.error("Error deleting act: ", error);
     } finally {
       setInlineLoading(false);
@@ -123,8 +128,10 @@ function ViewBeatSheet() {
       setInlineLoading(true);
       await beatSheetApi.deleteBeat(beatToDelete.actId, beatToDelete.id);
       setBeatToDelete(null);
+      setNotification({ message: 'Beat deleted successfully', type: 'success' });
       await fetchBeatSheet();
     } catch (error) {
+      setNotification({ message: 'Error deleting beat', type: 'error' });
       console.error("Error deleting beat: ", error);
     } finally {
       setInlineLoading(false);
@@ -169,18 +176,35 @@ function ViewBeatSheet() {
     }
   }
 
+  const afterSave = async (name) => {
+    setNotification({ message: `${name} saved successfully`, type: 'success' });
+    await fetchBeatSheet();
+  }
+
+  const handleCloseNotification = () => {
+    setNotification({ message: null, type: null });
+  };
+
   return loading ? (
     <Loader />
   ) : error ? (
     <div className="text-red-500">{error}</div>
   ) : (
     <>
+      {notification.message && (
+        <Notify 
+          message={notification.message} 
+          type={notification.type} 
+          onClose={handleCloseNotification} 
+        />
+      )
+      }
       {
         selectedAct && (
           <EditFormModal
             name="Act"
             entity={{...selectedAct, beatSheetId}}
-            afterSave={fetchBeatSheet}
+            afterSave={() => afterSave('Act')}
             onClose={() => setSelectedAct(null)}
           />
         )
@@ -189,7 +213,7 @@ function ViewBeatSheet() {
         <BeatFormModal
           actId={selectedBeat.actId}
           beat={selectedBeat?.id ? selectedBeat : {}}
-          afterSave={fetchBeatSheet}
+          afterSave={() => afterSave('Beat')}
           onClose={() => setSelectedBeat(null)}
         />
       ) : null}

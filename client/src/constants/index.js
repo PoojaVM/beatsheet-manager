@@ -1,5 +1,4 @@
-export const LOGIN_FORM_FIELDS = 
- {
+export const LOGIN_FORM_FIELDS = {
     signUp: {
       email: {
         label: "Email",

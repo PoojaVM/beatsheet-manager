@@ -40,7 +40,7 @@ const AppWithAuthenticator = withAuthenticator(
       <App {...props} />
     </AuthProvider>
   ),
-  { LOGIN_FORM_FIELDS }
+  { formFields: LOGIN_FORM_FIELDS }
 );
 
 export default AppWithAuthenticator;

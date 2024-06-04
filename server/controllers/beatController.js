@@ -1,4 +1,28 @@
-import { Beat, Act } from "../models/index.js";
+import sequelize, { Beat, Act } from "../models/index.js";
+
+async function adjustPositions(beatToMove, actId, newPosition, transaction) {
+  const beats = await Beat.findAll({
+    where: { act_id: actId },
+    order: [["position", "ASC"]],
+    transaction,
+  });
+
+  // Remove beat from old position and reinsert at new position
+  // If act is different, then we just insert at the new position(since we won't find that beat in new act)
+  const currentIndex = beats.findIndex((beat) => beat.id === beatToMove.id);
+  if (currentIndex !== -1) {
+    beats.splice(currentIndex, 1);
+  }
+  if (newPosition != null) {
+    beats.splice(newPosition - 1, 0, beatToMove);
+  }
+
+  // Recalculate the position indices and times
+  for (const beat of beats) {
+    beat.position = beats.indexOf(beat) + 1;
+    await beat.save({ transaction });
+  }
+}
 
 export default class BeatController {
   async list(req, res, next) {
@@ -16,7 +40,30 @@ export default class BeatController {
       const { actId: act_id } = req.params;
 
       const beat = req.body;
-      const newBeat = await Beat.create({ beat, act_id });
+      const { title, description, duration, camera_angle } = beat;
+
+      if (!title) {
+        throw { status: 400, message: "Title is required" };
+      }
+
+      if (!description) {
+        throw { status: 400, message: "Description is required" };
+      }
+
+      if (!duration) {
+        throw { status: 400, message: "Duration is required" };
+      }
+
+      const position = (await Beat.count({ where: { act_id } })) + 1;
+
+      const newBeat = await Beat.create({
+        title,
+        description,
+        duration,
+        camera_angle,
+        position,
+        act_id,
+      }, { returning: true });
       res.json({ beat: newBeat });
     } catch (error) {
       next(error);
@@ -36,8 +83,32 @@ export default class BeatController {
   async update(req, res, next) {
     try {
       const id = req.params.id;
-      const beat = req.body;
-      const updatedBeat = await Beat.update(id, beat);
+      const { title, description, duration, cameraAngle } = req.body;
+      const payload = {};
+
+      if (!title) {
+        throw { status: 400, message: "Title is required" };
+      }
+
+      if (!description) {
+        throw { status: 400, message: "Description is required" };
+      }
+
+      if (!duration) {
+        throw { status: 400, message: "Duration is required" };
+      }
+
+      payload.title = title;
+      payload.description = description;
+      payload.duration = duration;
+      payload.camera_angle = cameraAngle;
+
+      const updatedBeat = await Beat.update(
+        payload,
+        { where: { id } },
+        { returning: true }
+      );
+
       res.json({ beat: updatedBeat });
     } catch (error) {
       next(error);
@@ -70,6 +141,8 @@ export default class BeatController {
           return beatToMove;
         }
 
+        beatToMove.position = newPosition;
+
         // If we are moving beat to a new act
         // verify that the new act is valid first
         // then update act_id for the beat
@@ -84,12 +157,12 @@ export default class BeatController {
           // This means, we will adjust the positions for the act
           // ignoring the beat we are moving.
           // This is because the beat will be added to the new act
-          await this.#adjustPositions(beatToMove, oldActId, null, t);
+          await adjustPositions(beatToMove, oldActId, null, t);
         }
 
         // Now adjust positions for beats in newAct
         // If act did not change, then we will adjust positions for the old act only
-        await this.#adjustPositions(beatToMove, newActId, newPosition, t);
+        await adjustPositions(beatToMove, newActId, newPosition, t);
 
         return beatToMove;
       });
@@ -108,29 +181,5 @@ export default class BeatController {
     } catch (error) {
       next(error);
     }
-  }
-
-  async #adjustPositions(beatToMove, actId, newPosition, transaction) {
-    const beats = await Beat.findAll({
-      where: { act_id: actId },
-      order: [["position", "ASC"]],
-      transaction,
-    });
-
-    // Remove beat from old position and reinsert at new position
-    // If act is different, then we just insert at the new position(since we won't find that beat in new act)
-    const currentIndex = beats.findIndex((beat) => beat.id === beatToMove.id);
-    if (currentIndex !== -1) {
-      beats.splice(currentIndex, 1);
-    }
-    if (newPosition != null) {
-      beats.splice(newPosition - 1, 0, beatToMove);
-    }
-
-    // Recalculate the position indices and times
-    beats.forEach((beat, index) => {
-      beat.position = index + 1;
-      beat.save({ transaction });
-    });
   }
 }

@@ -53,11 +53,11 @@ module.exports = {
         defaultValue: null,
       },
     });
-    await queryInterface.addConstraint("beats", {
-      fields: ["act_id", "position"],
-      type: "unique",
-      name: "unique_position_per_act",
-    });
+    // await queryInterface.addConstraint("beats", {
+    //   fields: ["act_id", "position"],
+    //   type: "unique",
+    //   name: "unique_position_per_act",
+    // });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("beats");

@@ -2,22 +2,22 @@ import axiosInstance from "./axiosInstance";
 
 const beatSheetApi = {
   async getBeatSheets({ search }) {
-      try {
-        const response = await axiosInstance.get("beatsheets", {
-          params: { search: search?.length ? search : undefined },
-        });
-        return response.data;  
-      } catch (error) {
-        console.error('Error fetching beat sheets: ', error);
-        throw error;
-      }
+    try {
+      const response = await axiosInstance.get("beatsheets", {
+        params: { search: search?.length ? search : undefined },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching beat sheets: ", error);
+      throw error;
+    }
   },
   async getBeatSheet(id) {
     try {
       const response = await axiosInstance.get(`/beatsheets/${id}`);
       return response.data;
     } catch (error) {
-      console.error('Error fetching beat sheet: ', error);
+      console.error("Error fetching beat sheet: ", error);
       throw error;
     }
   },
@@ -26,7 +26,7 @@ const beatSheetApi = {
       const response = await axiosInstance.post("/beatsheets", data);
       return response.data;
     } catch (error) {
-      console.error('Error creating beat sheet: ', error);
+      console.error("Error creating beat sheet: ", error);
       throw error;
     }
   },
@@ -35,7 +35,29 @@ const beatSheetApi = {
       const response = await axiosInstance.put(`/beatsheets/${id}`, data);
       return response.data;
     } catch (error) {
-      console.error('Error updating beat sheet: ', error);
+      console.error("Error updating beat sheet: ", error);
+      throw error;
+    }
+  },
+  async reorderBeat(beatId, actId, newPosition, newActId) {
+    try {
+      const response = await axiosInstance.put(
+        `acts/${actId}/beats/${beatId}/reorder`,
+        { newPosition, newActId }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error reordering beat: ", error);
+      throw error;
+    }
+  },
+  // edit act title beatSheets/:beatSheetId/acts
+  async updateAct(beatSheetId, actId, title) {
+    try {
+      const response = await axiosInstance.put(`/beatSheets/${beatSheetId}/acts/${actId}`, {title});
+      return response.data;
+    } catch (error) {
+      console.error("Error updating act: ", error);
       throw error;
     }
   },

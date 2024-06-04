@@ -5,13 +5,13 @@ import beatSheetApi from "../api";
 import DismissableAlert from "./DismissableAlert";
 import Loader from "./Loader";
 
-const BeatSheetFormModal = ({ beatSheet, afterSave, onClose }) => {
+const EditFormModal = ({ entity, afterSave, onClose, name }) => {
   const [title, setTitle] = useState({
-    value: beatSheet?.title || "",
+    value: entity?.title || "",
     error: null,
   });
   const [description, setDescription] = useState({
-    value: beatSheet?.description || "",
+    value: entity?.description || "",
     error: null,
   });
   const [loading, setLoading] = useState(false);
@@ -19,14 +19,14 @@ const BeatSheetFormModal = ({ beatSheet, afterSave, onClose }) => {
 
   useEffect(() => {
     setTitle({
-      value: beatSheet?.title || "",
+      value: entity?.title || "",
       error: null,
     });
     setDescription({
-      value: beatSheet?.description || "",
+      value: entity?.description || "",
       error: null,
     });
-  }, [beatSheet]);
+  }, [entity]);
 
   const handleSubmit = async (event) => {
     try {
@@ -49,13 +49,17 @@ const BeatSheetFormModal = ({ beatSheet, afterSave, onClose }) => {
       setLoading(true);
       setError(null);
 
-      if (beatSheet?.id) {
-        await beatSheetApi.updateBeatSheet(beatSheet.id, data);
+      if (name === "BeatSheet") {
+        if (entity?.id) {
+          await beatSheetApi.updateBeatSheet(entity.id, data);
+        } else {
+          await beatSheetApi.createBeatSheet(data);
+        }
+  
+        await afterSave();
       } else {
-        await beatSheetApi.createBeatSheet(data);
+        await beatSheetApi.updateAct(entity.beatSheetId, entity.id, data);
       }
-
-      await afterSave();
       setLoading(false);
       onClose();
     } catch (error) {
@@ -69,7 +73,7 @@ const BeatSheetFormModal = ({ beatSheet, afterSave, onClose }) => {
       id="beatSheetFormModal"
       tabIndex="-1"
       aria-hidden="true"
-      className={`fixed inset-0 z-50 overflow-y-auto ${!beatSheet && "hidden"}`}
+      className={`fixed inset-0 z-50 overflow-y-auto ${!entity && "hidden"}`}
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
@@ -98,7 +102,7 @@ const BeatSheetFormModal = ({ beatSheet, afterSave, onClose }) => {
             {loading && <Loader />}
             <div class="flex items-start justify-between py-4 border-b rounded-t dark:border-gray-600">
               <h3 class="text-xl font-semibold text-gray-900">
-                {beatSheet?.id ? "Edit" : "Create"} Beat Sheet
+                {entity?.id ? "Edit" : "Create"} {name}
               </h3>
               <button
                 type="button"
@@ -170,4 +174,4 @@ const BeatSheetFormModal = ({ beatSheet, afterSave, onClose }) => {
   );
 };
 
-export default BeatSheetFormModal;
+export default EditFormModal;

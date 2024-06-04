@@ -12,18 +12,6 @@ import ViewBeatSheet from "./components/ViewBeatSheet";
 
 function App() {
   const { authUser, loading } = useAuth();
-  // const [showWelcome, setShowWelcome] = useState(false);
-
-  // useEffect(() => {
-  //   if (!loading && authUser) {
-  //     setShowWelcome(true);
-  //     const timer = setTimeout(() => {
-  //       setShowWelcome(false);
-  //     }, 4000);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [loading, authUser]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -34,10 +22,10 @@ function App() {
       <Routes>
         {authUser ? (
           <>
-            <Route path="/home" element={<Layout><Home /></Layout>} />
+            {/* <Route path="/home" element={<Layout><Home /></Layout>} /> */}
             <Route path="/beatsheets" element={<Layout><BeatSheets /></Layout>} />
             <Route path="/beatsheets/:id" element={<Layout><ViewBeatSheet /></Layout>} />
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<Navigate to="/beatsheets" replace />} />
           </>
         ) : (
           <>

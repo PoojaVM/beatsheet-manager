@@ -1,5 +1,7 @@
 import { Op } from "sequelize";
 import { BeatSheet } from "../models/index.js";
+import { Act } from "../models/index.js";
+import { Beat } from "../models/index.js";
 
 export default class BeatSheetController {
   async list(req, res, next) {
@@ -66,11 +68,20 @@ export default class BeatSheetController {
       const beatSheet = await BeatSheet.findOne({
         where: { id },
         include: [
-          {
-            association: "acts",
-            include: [{ association: "beats" }],
-          },
+            {
+                association: "acts",
+                include: [
+                    {
+                        association: "beats"
+                    }
+                ],
+                order: [['position', 'ASC']], // Order acts by position
+            },
         ],
+        order: [ // You can specify multiple levels of ordering
+            [{ model: Act, as: 'acts' }, 'position', 'ASC'], // Orders acts within the beatSheet
+            [{ model: Act, as: 'acts' }, { model: Beat, as: 'beats' }, 'position', 'ASC'] // Orders beats within each act
+        ]
       });
       if (!beatSheet) {
         throw { status: 404, message: "BeatSheet not found" };

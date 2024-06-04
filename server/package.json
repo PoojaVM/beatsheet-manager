@@ -7,9 +7,9 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "NODE_ENV=test nodemon server.js",
-    "migrate:dev:up": "sequelize db:migrate",
-    "migrate:dev:down": "sequelize db:migrate:undo",
-    "seed:dev": "sequelize db:seed:all"
+    "migrate:up": "sequelize db:migrate",
+    "migrate:down": "sequelize db:migrate:undo",
+    "seed": "sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",

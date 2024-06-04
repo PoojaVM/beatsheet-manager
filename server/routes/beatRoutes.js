@@ -8,7 +8,7 @@ router.get("/", beatController.list);
 router.post("/", beatController.create);
 router.get("/:id", beatController.get);
 router.put("/:id", beatController.update);
-router.put("/:id/reorder", beatController.update);
+router.put("/:id/reorder", beatController.reorder);
 router.delete("/:id", beatController.delete);
 
 export default router;

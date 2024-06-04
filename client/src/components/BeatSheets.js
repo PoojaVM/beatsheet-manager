@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import beatSheetApi from "../api";
-import BeatSheetFormModal from "./BeatSheetFormModal";
+import EditFormModal from "./EditModal";
 import { CloseIcon, SearchIcon } from "../assets";
 import useDebouncedInput from "../hooks/useDebouncedInput";
 
@@ -82,8 +82,9 @@ const BeatSheets = () => {
   return (
     <div>
       {selectedBeatSheet && (
-        <BeatSheetFormModal
-          beatSheet={selectedBeatSheet}
+        <EditFormModal
+          name="BeatSheet"
+          entity={selectedBeatSheet}
           afterSave={fetchBeatSheets}
           onClose={() => setSelectedBeatSheet(null)}
         />
@@ -158,13 +159,13 @@ const BeatSheets = () => {
                         navigate(`/beatsheets/${beatSheet.id}`);
                       }}
                     >
-                      View
+                      Edit Acts
                     </button>
                     <button
                       className="font-medium text-primary-600 dark:text-primary-500 hover:underline"
                       onClick={() => setSelectedBeatSheet(beatSheet)}
                     >
-                      Edit
+                      Edit BeatSheet
                     </button>
                   </td>
                 </tr>

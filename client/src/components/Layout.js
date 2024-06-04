@@ -1,8 +1,8 @@
 // src/components/Layout.js
-import React, { useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import AppBar from './AppBar';
-import Welcome from './Welcome';
+import React, { useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import AppBar from "./AppBar";
+import Welcome from "./Welcome";
 
 const Layout = ({ children }) => {
   const { loading, showWelcome, setShowWelcome, authUser } = useAuth();
@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
     if (!loading && authUser && showWelcome) {
       const timer = setTimeout(() => {
         setShowWelcome(false);
-      }, 2500);
+      }, 2800);
 
       return () => clearTimeout(timer);
     }
@@ -19,12 +19,19 @@ const Layout = ({ children }) => {
 
   return (
     <div className="bg-background min-h-screen max-w-screen-xl lg:max-w-screen-2xl mx-auto p-2">
-      {showWelcome
-        ? <Welcome />
-        : (<>
-            <AppBar />
-            <div className="mt-20">{children}</div>
-        </>)}
+      {showWelcome ? (
+        <Welcome />
+      ) : (
+        <>
+          <AppBar />
+          <div
+            className="mt-20 overflow-scroll"
+            style={{ height: "calc(100vh - 80px - 5rem)" }}
+          >
+            {children}
+          </div>
+        </>
+      )}
     </div>
   );
 };

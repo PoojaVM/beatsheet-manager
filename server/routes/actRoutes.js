@@ -9,5 +9,6 @@ router.post("/", actController.create);
 router.get("/:id", actController.get);
 router.put("/:id", actController.update);
 router.delete("/:id", actController.delete);
+router.put("/:id/reorder", actController.reorder);
 
 export default router;

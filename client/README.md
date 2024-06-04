@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# BeatSheet Creator Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Candidate: Pooja Mule (poojamules95@gmail.com)
 
-## Available Scripts
+## Table of Contents
+- [Links](#links)
+- [Usage Instructions](#usage-instructions)
+- [Features](#features)
+- [UI Considerations](#ui-considerations)
+- [Technologies Used](#technologies-used)
+- [Bonus Features](#bonus-features)
 
-In the project directory, you can run:
 
-### `npm start`
+### Links
+- AWS Website http://beetsheet-app.s3-website-us-east-1.amazonaws.com
+- Github Repository: https://github.com/PoojaVM/beatsheet-manager
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+###  Usage Instructions
+1. Deployed website can be accessed using [this link](http://beetsheet-app.s3-website-us-east-1.amazonaws.com)
+2. Local setup instructions
+    - Prerequisite
+        - Node.js
+        - npm
+        - git
+    - Clone the repository using command "git clone [this link](https://github.com/PoojaVM/beatsheet-manager)"
+    - Server setup
+        - Navigate to the server directory using command "cd server"
+        - Install dependencies using command "npm install"
+        - Start the server using command "npm start"
+    - Postgres setup
+        - Ensure you have database named `postgres ` running on port `5432`
+        - Refer to `.env.example` file and create a `.env` file with the required environment variables
+        - Migration and seeding can be done using the following commands
+            - `npm run migrate:up`
+            - `npx run seed`
+        - To revert the migration, run the following command 3 times
+            - `npm run migrate:down`
+    - Client setup
+        - Navigate to the client directory using command "cd client"
+        - Install dependencies using command "npm install"
+        - Start the application using command "npm start"
+    - Open the browser and visit `http://localhost:3000` and sign up using gmail to access the application
+3. Existing credentials
+    - Username: `poojamules95`
+    - Password: `Test@123`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Features
+1. Authentication
+    - AWS Congito is used for authentication
+    - To sign up, use a valid email address, a unique username, and password
+    - User can sign up, sign in, reset password, and sign out
+2. Routing
+    - Routing is protected and user is redirected to login page if not authenticated
+    - User is redirected to `beetsheets` page if already authenticated
+    - User can view and edit each beatsheet by clicking on the respective row and the route changes accordingly
+3. Welcome Page
+    - User is shown a welcome message upon login
+4. List Beatsheets
+    - Users are shows a list of beatsheets post welcome message
+    - Each row shows the beatsheet name, description, created date, and last updated date
+    - User can click on the action items in the row to view and edit the beatsheet
+5. Beatsheet actions
+    - Add new beatsheet
+    - Edit beatsheet
+    - Delete beatsheet
+6. Act actions
+    - Add new act
+    - Edit act
+    - Delete act
+7. Beats actions
+    - Add new beat
+    - Edit beat
+    - Delete beat
 
-### `npm test`
+### Bonus Features
+1. AWS hosting
+2. Animations
+3. Beatsheet deletion
+4. Beatsheet pagination
+5. Reorder acts (drag and drop acts) 
+6. Reorder beats (moving beats in same act and across acts)
+7. Responsive design
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### UI Considerations
+1. Styling is done using Tailwind CSS
+2. Primary color - #FFC300
+3. Secondary color - #181818
+4. The UI is responsive and works well on all screen sizes
+5. Validations are done on the client side and the user is shown an error message if the input is invalid

@@ -4,7 +4,7 @@ import { BeatSheet } from "../models/index.js";
 export default class BeatSheetController {
   async list(req, res, next) {
     try {
-      let { page, limit, sortDir, sort, search, completed } = req.params;
+      let { page, limit, sortDir, sort, search, completed } = req.query;
 
       page = parseInt(page) || 0;
       limit = parseInt(limit) || 10;
@@ -19,10 +19,11 @@ export default class BeatSheetController {
             ],
           }
         : {};
-      
-      if (typeof completed === "boolean") {
-        where.completed_at = completed ? { [Op.not]: null } : null;
+      if (completed === "true" || completed === "false") {
+        where.completed_at = completed === "true" ? { [Op.not]: null } : null;
       }
+
+      where.created_by = req.userName;
 
       const { rows, count } = await BeatSheet.findAndCountAll({
         where,
@@ -47,8 +48,12 @@ export default class BeatSheetController {
       if (!description) {
         throw { status: 400, message: "Description is required" };
       }
-
-      const beatSheet = await BeatSheet.create({ title, description });
+      console.log('USER OBJECT', req.userName);
+      const beatSheet = await BeatSheet.create({
+        title,
+        description,
+        created_by: req.userName,
+      });
       res.status(201).json({ beatSheet });
     } catch (error) {
       next(error);

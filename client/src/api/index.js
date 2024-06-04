@@ -4,7 +4,7 @@ const beatSheetApi = {
   async getBeatSheets({ search }) {
       try {
         const response = await axiosInstance.get("beatsheets", {
-          params: { search: search ?? null },
+          params: { search: search?.length ? search : undefined },
         });
         return response.data;  
       } catch (error) {

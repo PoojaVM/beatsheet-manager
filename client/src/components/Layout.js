@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
     if (!loading && authUser && showWelcome) {
       const timer = setTimeout(() => {
         setShowWelcome(false);
-      }, 4000);
+      }, 2500);
 
       return () => clearTimeout(timer);
     }
